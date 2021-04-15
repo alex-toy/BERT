@@ -6,9 +6,8 @@ checkpoint/*
 models/*
 !models/README.md
 
-data/es_en/europarl-v7.es-en.en
-data/es_en/europarl-v7.es-en.es
-data/utils.txt
+data/testdata.manual.2009.06.14.csv
+data/training.1600000.processed.noemoticon.csv
 
 output/inputs.csv
 output/outputs.csv
