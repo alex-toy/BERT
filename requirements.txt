@@ -4,3 +4,8 @@ tensorflow
 tensorflow_datasets
 joblib
 pickle-mixin
+bert-for-tf2
+sentencepiece
+tensorflow_hub
+bs4
+bert
