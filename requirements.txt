@@ -1,0 +1,6 @@
+numpy==1.19.2
+pandas
+tensorflow
+tensorflow_datasets
+joblib
+pickle-mixin
