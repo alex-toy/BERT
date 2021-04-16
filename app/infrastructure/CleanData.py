@@ -66,6 +66,7 @@ class CleanData :
 
     def get_data_labels(self) :
         data_labels = self.get_cleaned_df()['sentiment'].values
+        print('get_data_labels')
         return data_labels
 
 
@@ -79,7 +80,7 @@ class CleanData :
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
         do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
         tokenizer = FullTokenizer(vocab_file, do_lower_case)
-
+        print('get_tokenizer')
         return tokenizer
 
 
@@ -88,7 +89,7 @@ class CleanData :
         tokenizer = self.get_tokenizer()
         def encode_sentence(sent):
             return tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sent))
-
+        print('get_encode_sentence')
         return encode_sentence
 
 
