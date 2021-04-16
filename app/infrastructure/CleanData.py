@@ -69,6 +69,7 @@ class CleanData :
         return data_labels
 
 
+
     def get_tokenizer(self):
         FullTokenizer = bert_tokenization.FullTokenizer
         bert_layer = hub.KerasLayer(
