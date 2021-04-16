@@ -1,6 +1,9 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
+from app.infrastructure.CleanData import CleanData
+import app.config as cf
+
 class DCNN(tf.keras.Model):
     
     def __init__(self,
@@ -54,3 +57,28 @@ class DCNN(tf.keras.Model):
         output = self.last_dense(merged)
         
         return output
+
+
+
+if __name__ == "__main__":
+
+
+    cd = CleanData(
+        path=cf.INPUTS_FILE, 
+        cols=cf.COLS,
+        cols_to_keep=cf.COLS_TO_KEEP
+    )
+
+    tokenizer = cd.get_tokenizer()
+
+    
+    VOCAB_SIZE = len(tokenizer.vocab)
+    
+    Dcnn = DCNN(
+        vocab_size=VOCAB_SIZE,
+        emb_dim=cf.EMB_DIM,
+        nb_filters=cf.NB_FILTERS,
+        FFN_units=cf.FFN_UNITS,
+        nb_classes=cf.NB_CLASSES,
+        dropout_rate=cf.DROPOUT_RATE
+    )

@@ -69,14 +69,6 @@ class CleanData :
         return data_labels
 
 
-
-    def get_data_inputs(self) :
-        data_clean = self.get_data_clean()
-        encode_sentence = self.get_tokenizer()
-        return [encode_sentence(sentence) for sentence in data_clean]
-
-
-
     def get_tokenizer(self):
         FullTokenizer = bert_tokenization.FullTokenizer
         bert_layer = hub.KerasLayer(
@@ -86,11 +78,24 @@ class CleanData :
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
         do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
         tokenizer = FullTokenizer(vocab_file, do_lower_case)
-        
+
+        return tokenizer
+
+
+
+    def get_encode_sentence(self):
+        tokenizer = self.get_tokenizer()
         def encode_sentence(sent):
             return tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sent))
 
         return encode_sentence
+
+
+
+    def get_data_inputs(self) :
+        data_clean = self.get_data_clean()
+        encode_sentence = self.get_encode_sentence()
+        return [encode_sentence(sentence) for sentence in data_clean]
 
 
 
