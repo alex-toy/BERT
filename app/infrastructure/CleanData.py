@@ -43,11 +43,22 @@ class CleanData :
         return tweet
 
 
+
     def get_cleaned_df(self):
         df = self.get_df_from_path()
         df['text'] = df['text'].apply(lambda tweet : self.clean_tweet(tweet))
         return df
 
+
+
+    def get_data_clean(self) :
+        data_clean = self.get_cleaned_df()['text'].values
+        return data_clean
+
+
+    def get_data_labels(self) :
+        data_labels = self.get_cleaned_df()['sentiment'].values
+        return data_labels
 
 
 
@@ -59,8 +70,8 @@ if __name__ == "__main__":
         cols_to_keep=["sentiment", "text"]
     )
 
-    dataset = cd.get_cleaned_df()
+    data_labels = cd.get_data_labels()
 
-    print(dataset)
+    print(data_labels)
 
 
