@@ -67,7 +67,6 @@ class CleanData :
 
 
     def get_tokenizer(self):
-        #FullTokenizer = bert.tokenization.FullTokenizer
         FullTokenizer = bert_tokenization.FullTokenizer
         bert_layer = hub.KerasLayer(
             "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1",
@@ -98,8 +97,8 @@ if __name__ == "__main__":
 
     cd = CleanData(
         path=cf.INPUTS_FILE, 
-        cols=["sentiment", "id", "date", "query", "user", "text"],
-        cols_to_keep=["sentiment", "text"]
+        cols=cf.COLS,
+        cols_to_keep=cf.COLS_TO_KEEP
     )
 
     data_inputs = cd.get_data_inputs()

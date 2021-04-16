@@ -7,7 +7,8 @@ INPUTS_FILE = os.path.join(INPUTS_FILE_PATH, 'testdata.manual.2009.06.14.csv')
 
 
 
-
+COLS = ["sentiment", "id", "date", "query", "user", "text"]
+COLS_TO_KEEP = ["sentiment", "text"]
 
 
 OUTPUTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../output'))
