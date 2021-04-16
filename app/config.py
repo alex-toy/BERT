@@ -3,7 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
 INPUTS_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
-INPUTS_FILE = os.path.join(INPUTS_FILE_PATH, 'testdata.manual.2009.06.14.csv')
+INPUTS_FILE = os.path.join(INPUTS_FILE_PATH, 'training.1600000.processed.noemoticon.csv')
 
 
 COLS = ["sentiment", "id", "date", "query", "user", "text"]

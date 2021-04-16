@@ -96,6 +96,7 @@ class CleanData :
     def get_data_inputs(self) :
         data_clean = self.get_data_clean()
         encode_sentence = self.get_encode_sentence()
+        print('get_data_inputs')
         return [encode_sentence(sentence) for sentence in data_clean]
 
 
@@ -109,6 +110,7 @@ class CleanData :
         data_with_len.sort(key=lambda x: x[2])
         sorted_all = [(sent_lab[0], sent_lab[1]) for sent_lab in data_with_len if sent_lab[2] > 7]
         all_dataset = tf.data.Dataset.from_generator(lambda: sorted_all, output_types=(tf.int32, tf.int32))
+        print('get_dataset')
         return all_dataset, sorted_all
 
 
@@ -116,6 +118,7 @@ class CleanData :
     def get_all_batched(self) :
         all_dataset, sorted_all = self.get_dataset()
         all_batched = all_dataset.padded_batch(cf.BATCH_SIZE, padded_shapes=((None, ), ()))
+        print('get_all_batched')
         return all_batched, sorted_all
 
 
@@ -127,6 +130,7 @@ class CleanData :
         all_batched.shuffle(NB_BATCHES)
         test_dataset = all_batched.take(NB_BATCHES_TEST)
         train_dataset = all_batched.skip(NB_BATCHES_TEST)
+        print('get_train_test_dataset')
         return test_dataset, train_dataset
 
 
