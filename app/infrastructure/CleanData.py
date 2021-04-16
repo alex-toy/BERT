@@ -1,6 +1,7 @@
 import re
 import os
 import random
+import math
 import bert
 from bert.tokenization import bert_tokenization
 from bs4 import BeautifulSoup
@@ -102,23 +103,25 @@ class CleanData :
         data_with_len.sort(key=lambda x: x[2])
         sorted_all = [(sent_lab[0], sent_lab[1]) for sent_lab in data_with_len if sent_lab[2] > 7]
         all_dataset = tf.data.Dataset.from_generator(lambda: sorted_all, output_types=(tf.int32, tf.int32))
-        return all_dataset
+        return all_dataset, sorted_all
 
 
 
     def get_all_batched(self) :
-        all_dataset = self.get_dataset()
+        all_dataset, sorted_all = self.get_dataset()
         all_batched = all_dataset.padded_batch(cf.BATCH_SIZE, padded_shapes=((None, ), ()))
-        return all_batched
+        return all_batched, sorted_all
 
 
 
     def get_train_test_dataset(self) :
+        all_batched, sorted_all = self.get_all_batched()
         NB_BATCHES = math.ceil(len(sorted_all) / cf.BATCH_SIZE)
         NB_BATCHES_TEST = NB_BATCHES // 10
         all_batched.shuffle(NB_BATCHES)
         test_dataset = all_batched.take(NB_BATCHES_TEST)
         train_dataset = all_batched.skip(NB_BATCHES_TEST)
+        return test_dataset, train_dataset
 
 
 
@@ -131,9 +134,8 @@ if __name__ == "__main__":
         cols_to_keep=cf.COLS_TO_KEEP
     )
 
-    all_batched = cd.get_all_batched()
+    test_dataset, train_dataset = cd.get_train_test_dataset()
 
-    temp = next(iter(all_batched))
-    print(temp)
+    print(test_dataset)
 
 
