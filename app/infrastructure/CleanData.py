@@ -1,5 +1,6 @@
 import re
 import os
+import random
 import bert
 from bert.tokenization import bert_tokenization
 from bs4 import BeautifulSoup
@@ -7,9 +8,11 @@ import pandas as pd
 import tensorflow as tf
 import tensorflow_hub as hub
 import tensorflow_datasets as tfds
+from joblib import dump, load
+
 import app.config as cf
 
-from joblib import dump, load
+
 
 
 class CleanData :
@@ -66,6 +69,13 @@ class CleanData :
 
 
 
+    def get_data_inputs(self) :
+        data_clean = self.get_data_clean()
+        encode_sentence = self.get_tokenizer()
+        return [encode_sentence(sentence) for sentence in data_clean]
+
+
+
     def get_tokenizer(self):
         FullTokenizer = bert_tokenization.FullTokenizer
         bert_layer = hub.KerasLayer(
@@ -83,12 +93,32 @@ class CleanData :
 
 
 
-    def get_data_inputs(self) :
-        data_clean = self.get_data_clean()
-        encode_sentence = self.get_tokenizer()
-        return [encode_sentence(sentence) for sentence in data_clean]
+    def get_dataset(self) :
+        data_labels = self.get_data_labels()
+        data_inputs = self.get_data_inputs()
+
+        data_with_len = [[sent, data_labels[i], len(sent)] for i, sent in enumerate(data_inputs)]
+        random.shuffle(data_with_len)
+        data_with_len.sort(key=lambda x: x[2])
+        sorted_all = [(sent_lab[0], sent_lab[1]) for sent_lab in data_with_len if sent_lab[2] > 7]
+        all_dataset = tf.data.Dataset.from_generator(lambda: sorted_all, output_types=(tf.int32, tf.int32))
+        return all_dataset
 
 
+
+    def get_all_batched(self) :
+        all_dataset = self.get_dataset()
+        all_batched = all_dataset.padded_batch(cf.BATCH_SIZE, padded_shapes=((None, ), ()))
+        return all_batched
+
+
+
+    def get_train_test_dataset(self) :
+        NB_BATCHES = math.ceil(len(sorted_all) / cf.BATCH_SIZE)
+        NB_BATCHES_TEST = NB_BATCHES // 10
+        all_batched.shuffle(NB_BATCHES)
+        test_dataset = all_batched.take(NB_BATCHES_TEST)
+        train_dataset = all_batched.skip(NB_BATCHES_TEST)
 
 
 
@@ -101,8 +131,9 @@ if __name__ == "__main__":
         cols_to_keep=cf.COLS_TO_KEEP
     )
 
-    data_inputs = cd.get_data_inputs()
+    all_batched = cd.get_all_batched()
 
-    print(data_inputs)
+    temp = next(iter(all_batched))
+    print(temp)
 
 

@@ -19,7 +19,7 @@ CHECKPOINT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../ch
 OUTPUTS_MODELS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../models'))
 
 MAX_LENGTH=20
-BATCH_SIZE = 64
+BATCH_SIZE = 32
 BUFFER_SIZE = 20000
 D_MODEL = 128 # 512
 NB_LAYERS = 4 # 6
