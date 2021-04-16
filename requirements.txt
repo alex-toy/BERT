@@ -9,4 +9,5 @@ sentencepiece
 tensorflow_hub
 bs4
 bert
+bert-tensorflow
 lxml

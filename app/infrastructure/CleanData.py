@@ -1,8 +1,11 @@
 import re
 import os
+import bert
+from bert.tokenization import bert_tokenization
 from bs4 import BeautifulSoup
 import pandas as pd
 import tensorflow as tf
+import tensorflow_hub as hub
 import tensorflow_datasets as tfds
 import app.config as cf
 
@@ -56,9 +59,38 @@ class CleanData :
         return data_clean
 
 
+
     def get_data_labels(self) :
         data_labels = self.get_cleaned_df()['sentiment'].values
         return data_labels
+
+
+
+    def get_tokenizer(self):
+        #FullTokenizer = bert.tokenization.FullTokenizer
+        FullTokenizer = bert_tokenization.FullTokenizer
+        bert_layer = hub.KerasLayer(
+            "https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1",
+            trainable=False
+        )
+        vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
+        do_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
+        tokenizer = FullTokenizer(vocab_file, do_lower_case)
+        
+        def encode_sentence(sent):
+            return tokenizer.convert_tokens_to_ids(tokenizer.tokenize(sent))
+
+        return encode_sentence
+
+
+
+    def get_data_inputs(self) :
+        data_clean = self.get_data_clean()
+        encode_sentence = self.get_tokenizer()
+        return [encode_sentence(sentence) for sentence in data_clean]
+
+
+
 
 
 
@@ -70,8 +102,8 @@ if __name__ == "__main__":
         cols_to_keep=["sentiment", "text"]
     )
 
-    data_labels = cd.get_data_labels()
+    data_inputs = cd.get_data_inputs()
 
-    print(data_labels)
+    print(data_inputs)
 
 
