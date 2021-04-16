@@ -1,5 +1,6 @@
 import re
 import os
+from bs4 import BeautifulSoup
 import pandas as pd
 import tensorflow as tf
 import tensorflow_datasets as tfds
@@ -33,13 +34,19 @@ class CleanData :
 
 
 
-    def clean_tweet(tweet):
+    def clean_tweet(self, tweet):
         tweet = BeautifulSoup(tweet, "lxml").get_text()
         tweet = re.sub(r"@[A-Za-z0-9]+", ' ', tweet)
         tweet = re.sub(r"https?://[A-Za-z0-9./]+", ' ', tweet)
         tweet = re.sub(r"[^a-zA-Z.!?']", ' ', tweet)
         tweet = re.sub(r" +", ' ', tweet)
         return tweet
+
+
+    def get_cleaned_df(self):
+        df = self.get_df_from_path()
+        df['text'] = df['text'].apply(lambda tweet : self.clean_tweet(tweet))
+        return df
 
 
 
@@ -52,7 +59,7 @@ if __name__ == "__main__":
         cols_to_keep=["sentiment", "text"]
     )
 
-    dataset = cd.get_df_from_path()
+    dataset = cd.get_cleaned_df()
 
     print(dataset)
 

@@ -9,3 +9,4 @@ sentencepiece
 tensorflow_hub
 bs4
 bert
+lxml
