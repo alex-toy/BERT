@@ -13,44 +13,47 @@ class CleanData :
     cleans text data from raw file
     """
 
-    def __init__(self, path='', cols=[]) :
+    def __init__(self, path='', cols=[], cols_to_keep=[]) :
         self.path = path
         self.cols = cols
+        self.cols_to_keep = cols_to_keep
 
 
 
     def get_df_from_path(self) :
         name, extension = os.path.splitext(self.path)
         if extension == '.csv':
-            df = pd.read_csv(self.path)
+            df = pd.read_csv(self.path, names=self.cols)
         elif extension == '.parquet':
-            df = pd.read_parquet(self.path)
+            df = pd.read_parquet(self.path, names=self.cols)
         else:
             raise FileExistsError('Extension must be parquet or csv.')
 
-        return df
+        return df[self.cols_to_keep]
 
 
 
-    def get_data(self):
-        with open(self.input_data_path, mode = "r", encoding = "utf-8") as f:
-            input_corpus = f.read()
-
-
-
+    def clean_tweet(tweet):
+        tweet = BeautifulSoup(tweet, "lxml").get_text()
+        tweet = re.sub(r"@[A-Za-z0-9]+", ' ', tweet)
+        tweet = re.sub(r"https?://[A-Za-z0-9./]+", ' ', tweet)
+        tweet = re.sub(r"[^a-zA-Z.!?']", ' ', tweet)
+        tweet = re.sub(r" +", ' ', tweet)
+        return tweet
 
 
 
 
 if __name__ == "__main__":
 
-    cd = CleanData(path='', cols=[])
+    cd = CleanData(
+        path='/Users/alexei/BERT/data/testdata.manual.2009.06.14.csv', 
+        cols=["sentiment", "id", "date", "query", "user", "text"],
+        cols_to_keep=["sentiment", "text"]
+    )
 
-    dataset = cd.get_dataset()
+    dataset = cd.get_df_from_path()
 
     print(dataset)
-
-
-    #cd.path_to_csv()
 
 
