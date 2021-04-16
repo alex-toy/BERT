@@ -3,6 +3,7 @@ import os
 from app.infrastructure.CleanData import CleanData
 from app.model.DCNN import DCNN
 from app.application.MyCustomCallback import MyCustomCallback
+from app.application.pickling import to_pickle, from_pickle
 
 import tensorflow as tf
 from joblib import dump, load
@@ -58,6 +59,15 @@ def train_model_global() :
 
     Dcnn.fit(train_dataset, epochs=cf.NB_EPOCHS, callbacks=[myCustomCallback])
 
+
+    results = Dcnn.evaluate(test_dataset)
+    print(results)
+
+    
+    #to_pickle('Dcnn', Dcnn)
+    
+    
+    #dump(Dcnn, os.path.join(cf.OUTPUTS_MODELS_DIR, 'Dcnn.joblib'))
 
 
 
