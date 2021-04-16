@@ -97,7 +97,7 @@ class CleanData :
 if __name__ == "__main__":
 
     cd = CleanData(
-        path='/Users/alexei/BERT/data/testdata.manual.2009.06.14.csv', 
+        path=cf.INPUTS_FILE, 
         cols=["sentiment", "id", "date", "query", "user", "text"],
         cols_to_keep=["sentiment", "text"]
     )

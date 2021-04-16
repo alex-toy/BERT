@@ -1,15 +1,16 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-europarl_en_path = "data/es_en/europarl-v7.es-en.en"
-europarl_es_path = "data/es_en/europarl-v7.es-en.es"
-#europarl_en_path = "data/es_en_test/europarl-v7.es-en.en"
-#europarl_es_path = "data/es_en_test/europarl-v7.es-en.es"
-nb_prefix_en_path = "data/nonbreaking_prefix.en"
-nb_prefix_es_path = "data/nonbreaking_prefix.es"
+
+INPUTS_FILE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data'))
+INPUTS_FILE = os.path.join(INPUTS_FILE_PATH, 'testdata.manual.2009.06.14.csv')
+
+
+
+
+
 
 OUTPUTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../output'))
-INPUTS_FILE = os.path.join(OUTPUTS_DIR, 'inputs.csv')
 OUTPUTS_FILE = os.path.join(OUTPUTS_DIR, 'outputs.csv')
 
 CHECKPOINT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../checkpoint'))
